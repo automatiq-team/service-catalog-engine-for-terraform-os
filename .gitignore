@@ -249,3 +249,23 @@ lambda-functions/terraform_open_source_parameter_parser/go.sum
 
 #AWS
 .aws-sam
+
+# JetBrains IDE project files
+.idea/
+
+# Vendored pip dependencies installed for Lambda packaging
+lambda-functions/state_machine_lambdas/bin/
+lambda-functions/state_machine_lambdas/boto3/
+lambda-functions/state_machine_lambdas/boto3-*.dist-info/
+lambda-functions/state_machine_lambdas/botocore/
+lambda-functions/state_machine_lambdas/botocore-*.dist-info/
+lambda-functions/state_machine_lambdas/dateutil/
+lambda-functions/state_machine_lambdas/jmespath/
+lambda-functions/state_machine_lambdas/jmespath-*.dist-info/
+lambda-functions/state_machine_lambdas/python_dateutil-*.dist-info/
+lambda-functions/state_machine_lambdas/s3transfer/
+lambda-functions/state_machine_lambdas/s3transfer-*.dist-info/
+lambda-functions/state_machine_lambdas/six.py
+lambda-functions/state_machine_lambdas/six-*.dist-info/
+lambda-functions/state_machine_lambdas/urllib3/
+lambda-functions/state_machine_lambdas/urllib3-*.dist-info/

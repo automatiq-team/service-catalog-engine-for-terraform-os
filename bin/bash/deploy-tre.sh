@@ -101,14 +101,17 @@ else
   SAM_STACK_EXISTS=0
 fi
 
-# Set up parameter overrides for sam deploy, if any are needed
-SERVICE_CATALOG_PARAMETER_OVERRIDES="$OVERRIDE_SERVICE_CATALOG_ENDPOINT $OVERRIDE_SERVICE_CATALOG_VERIFY_SSL"
-if [[ $SERVICE_CATALOG_PARAMETER_OVERRIDES =~ [A-Za-z] ]]
-then
-  SAM_DEPLOY_PARAMETER_OVERRIDES="--parameter-overrides $SERVICE_CATALOG_PARAMETER_OVERRIDES"
-else
-  unset SAM_DEPLOY_PARAMETER_OVERRIDES
-fi
+# Set up parameter overrides for sam deploy.
+# On an existing stack, sam deploy reuses the stack's previous parameter values,
+# so a changed template Default is ignored. TerraformCliVersion is always passed
+# explicitly, read from the template Default, so the template stays the source of truth.
+TERRAFORM_CLI_VERSION=$(awk '/^  TerraformCliVersion:/{f=1} f && /Default:/{print $2; exit}' template.yaml)
+[[ -z $TERRAFORM_CLI_VERSION ]] && { echo "Could not read TerraformCliVersion Default from template.yaml"; exit 1; }
+echo "Terraform CLI version for the runner instances: $TERRAFORM_CLI_VERSION"
+OVERRIDE_TERRAFORM_CLI_VERSION="ParameterKey=TerraformCliVersion,ParameterValue=$TERRAFORM_CLI_VERSION"
+
+SERVICE_CATALOG_PARAMETER_OVERRIDES="$OVERRIDE_TERRAFORM_CLI_VERSION $OVERRIDE_SERVICE_CATALOG_ENDPOINT $OVERRIDE_SERVICE_CATALOG_VERIFY_SSL"
+SAM_DEPLOY_PARAMETER_OVERRIDES="--parameter-overrides $SERVICE_CATALOG_PARAMETER_OVERRIDES"
 
 echo "Sending output of the sam deploy command to $SAM_DEPLOY_OUTPUT. This is done to check the results after the command has completed."
 echo "This may take a while. Please be patient."
